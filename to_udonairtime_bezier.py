@@ -2,7 +2,7 @@ bl_info = {
     "name": "Export Bezier Curve to UdonAirtime",
     "blender": (2, 80, 0),
     "author": "@squiddingme",
-    "location": "File > Export > Bezier Curve to UdonAirtime (.csv)",
+    "location": "File > Export > Bezier Curve to UdonAirtime (.json)",
     "category": "Import-Export",
 }
 
@@ -13,15 +13,16 @@ bl_info = {
 import sys, getopt
 import os
 import bpy
+import json
 from bpy_extras.io_utils import ExportHelper
 
 class AirtimeExport(bpy.types.Operator, ExportHelper):
     bl_idname = "me.export_udonairtime"
     bl_label = "Export Bezier Curve to UdonAirtime"
 
-    filename_ext = '.csv'
+    filename_ext = '.json'
     filter_glob: bpy.props.StringProperty(
-        default='*.csv',
+        default='*.json',
         options={'HIDDEN'}
     )
 
@@ -48,24 +49,27 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
                         split = os.path.splitext(self.filepath)
                         file = open("%s.%d%s" % (split[0], index, split[1]), "w")
 
+                    data = {
+                        "points": "",
+                    }
+
                     # first entry
                     first_point = bezier.bezier_points[0]
-                    line_first = format_first_str % (first_point.co.x, first_point.co.z, first_point.co.y, \
+                    data["points"] = data["points"] +  format_first_str % (first_point.co.x, first_point.co.z, first_point.co.y, \
                             first_point.handle_right.x, first_point.handle_right.z, first_point.handle_right.y)
-                    file.write(line_first)
 
                     # loop through points skipping first and last
                     for point in bezier.bezier_points[1:-1]:
-                        line = format_str % (point.handle_left.x, point.handle_left.z, point.handle_left.y, \
+                        data["points"] = data["points"] +  format_str % (point.handle_left.x, point.handle_left.z, point.handle_left.y, \
                             point.co.x, point.co.z, point.co.y, \
                             point.handle_right.x, point.handle_right.z, point.handle_right.y)
-                        file.write(line)
 
                     # last entry
                     last_point = bezier.bezier_points[-1]
-                    line_last = format_last_str % (last_point.handle_left.x, last_point.handle_left.z, last_point.handle_left.y, \
+                    data["points"] = data["points"] +  format_last_str % (last_point.handle_left.x, last_point.handle_left.z, last_point.handle_left.y, \
                             last_point.co.x, last_point.co.z, last_point.co.y)
-                    file.write(line_last)
+
+                    json.dump(data, file, ensure_ascii=False)
 
                     file.close()
 
@@ -80,7 +84,7 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
             return {'CANCELLED'}
 
 def menu_func(self, context):
-    self.layout.operator(AirtimeExport.bl_idname, text = "Export Bezier Curve to UdonAirtime (.csv)")
+    self.layout.operator(AirtimeExport.bl_idname, text = "Export Bezier Curve to UdonAirtime (.json)")
 
 def register():
     bpy.utils.register_class(AirtimeExport)
