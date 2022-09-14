@@ -71,7 +71,7 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
 
                     # first entry
                     first_point = bezier.bezier_points[0]
-                    data["points"].extend([first_point.co.x, first_point.co.z, first_point.co.y, first_point.handle_right.x, first_point.handle_right.z, first_point.handle_right.y])
+                    data["points"].extend([-first_point.co.x, first_point.co.z, -first_point.co.y, -first_point.handle_right.x, first_point.handle_right.z, -first_point.handle_right.y])
                     if first_point.handle_left_type == "ALIGNED" and first_point.handle_right_type == "ALIGNED":
                         data["modes"].append("ALIGNED");
                     else:
@@ -79,7 +79,7 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
 
                     # loop through points skipping first and last
                     for point in bezier.bezier_points[1:-1]:
-                        data["points"].extend([point.handle_left.x, point.handle_left.z, point.handle_left.y, point.co.x, point.co.z, point.co.y, point.handle_right.x, point.handle_right.z, point.handle_right.y])
+                        data["points"].extend([-point.handle_left.x, point.handle_left.z, -point.handle_left.y, -point.co.x, point.co.z, -point.co.y, -point.handle_right.x, point.handle_right.z, -point.handle_right.y])
                         if point.handle_left_type == "ALIGNED" and point.handle_right_type == "ALIGNED":
                             data["modes"].append("ALIGNED");
                         else:
@@ -87,7 +87,7 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
 
                     # last entry
                     last_point = bezier.bezier_points[-1]
-                    data["points"].extend([last_point.handle_left.x, last_point.handle_left.z, last_point.handle_left.y, last_point.co.x, last_point.co.z, last_point.co.y])
+                    data["points"].extend([-last_point.handle_left.x, last_point.handle_left.z, -last_point.handle_left.y, -last_point.co.x, last_point.co.z, -last_point.co.y])
                     if last_point.handle_left_type == "ALIGNED" and last_point.handle_right_type == "ALIGNED":
                         data["modes"].append("ALIGNED");
                     else:
@@ -95,8 +95,8 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
 
                     # add a few more entries to support udonairtime loops
                     if bezier.use_cyclic_u:
-                        data["points"].extend([last_point.handle_right.x, last_point.handle_right.z, last_point.handle_right.y])
-                        data["points"].extend([first_point.handle_left.x, first_point.handle_left.z, first_point.handle_left.y, first_point.co.x, first_point.co.z, first_point.co.y])
+                        data["points"].extend([-last_point.handle_right.x, last_point.handle_right.z, -last_point.handle_right.y])
+                        data["points"].extend([-first_point.handle_left.x, first_point.handle_left.z, -first_point.handle_left.y, -first_point.co.x, first_point.co.z, -first_point.co.y])
                         if first_point.handle_left_type == "ALIGNED" and first_point.handle_right_type == "ALIGNED":
                             data["modes"].append("ALIGNED");
                         else:
