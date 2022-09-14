@@ -66,6 +66,7 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
                         "index": index,
                         "points": [],
                         "modes": [],
+                        "loop": bezier.use_cyclic_u
                     }
 
                     # first entry
