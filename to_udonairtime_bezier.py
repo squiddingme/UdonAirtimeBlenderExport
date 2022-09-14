@@ -13,11 +13,17 @@ bl_info = {
 import sys, getopt
 import os
 import bpy
-from bpy_extras.io_utils import ImportHelper
+from bpy_extras.io_utils import ExportHelper
 
-class AirtimeExport(bpy.types.Operator, ImportHelper):
+class AirtimeExport(bpy.types.Operator, ExportHelper):
     bl_idname = "me.export_udonairtime"
     bl_label = "Export Bezier Curve to UdonAirtime"
+
+    filename_ext = '.csv'
+    filter_glob: bpy.props.StringProperty(
+        default='*.csv',
+        options={'HIDDEN'}
+    )
 
     def execute(self, context):
         if bpy.context.object.type == 'CURVE':
@@ -28,7 +34,7 @@ class AirtimeExport(bpy.types.Operator, ImportHelper):
                     beziers.append(subcurve)
 
             if len(beziers) > 0:
-                file = open(self.filepath + ".csv", "w")
+                file = open(self.filepath, "w")
 
                 format_first_str = '%f, %f, %f, %f, %f, %f'
                 format_str = ', %f, %f, %f, %f, %f, %f, %f, %f, %f\n'
@@ -55,7 +61,7 @@ class AirtimeExport(bpy.types.Operator, ImportHelper):
                     file.write(line_last)
 
                 file.close()
-                self.report({"INFO"}, "Exported to %s" % (self.filepath + ".csv"))
+                self.report({"INFO"}, "Exported to %s" % (self.filepath))
                 return {'FINISHED'}
             else:
                 self.report({"WARNING"}, "Valid UdonAirtime bezier needs at least two points")
