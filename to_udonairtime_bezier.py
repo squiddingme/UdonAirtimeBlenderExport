@@ -84,7 +84,7 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
             return {'CANCELLED'}
 
 def menu_func(self, context):
-    self.layout.operator(AirtimeExport.bl_idname, text = "Export Bezier Curve to UdonAirtime (.json)")
+    self.layout.operator(AirtimeExport.bl_idname, text = "Export Bezier Curve to UdonAirtime (.json)", icon = "CURVE_BEZCURVE")
 
 def register():
     bpy.utils.register_class(AirtimeExport)
