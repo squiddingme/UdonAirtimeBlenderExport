@@ -99,7 +99,7 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
                 self.report({"INFO"}, "Exported to %s" % (self.filepath))
                 return {'FINISHED'}
             else:
-                self.report({"WARNING"}, "Valid UdonAirtime bezier needs at least two points")
+                self.report({"WARNING"}, "There were no subcurves in selected bezier curve")
                 return {'CANCELLED'}
 
         else:
