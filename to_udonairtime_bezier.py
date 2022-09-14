@@ -50,6 +50,8 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
                         file = open("%s.%d%s" % (split[0], index, split[1]), "w")
 
                     data = {
+                        "name": bpy.context.object.name,
+                        "index": index,
                         "points": "",
                     }
 
