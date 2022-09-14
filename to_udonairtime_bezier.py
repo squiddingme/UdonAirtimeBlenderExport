@@ -26,6 +26,22 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
         options={'HIDDEN'}
     )
 
+    def invoke(self, context, event):
+        if not self.filepath:
+            blend_filepath = context.blend_data.filepath
+
+            filename = "untitled"
+            if bpy.context.object != None:
+                filename = bpy.context.object.name
+
+            if context.blend_data.filepath:
+                self.filepath = os.path.dirname(context.blend_data.filepath) + "/" + filename + self.filename_ext
+            else:
+                self.filepath = filename + self.filename_ext
+
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+
     def execute(self, context):
         if bpy.context.object == None:
             self.report({"WARNING"}, "No object selected")
