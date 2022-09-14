@@ -26,7 +26,10 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
     )
 
     def execute(self, context):
-        if bpy.context.object.type == 'CURVE':
+        if bpy.context.object == None:
+            self.report({"WARNING"}, "No object selected")
+            return {'CANCELLED'}
+        elif bpy.context.object.type == 'CURVE':
             beziers = []
 
             for subcurve in bpy.context.active_object.data.splines:
@@ -34,13 +37,17 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
                     beziers.append(subcurve)
 
             if len(beziers) > 0:
-                file = open(self.filepath, "w")
-
                 format_first_str = '%f, %f, %f, %f, %f, %f'
                 format_str = ', %f, %f, %f, %f, %f, %f, %f, %f, %f\n'
                 format_last_str = ', %f, %f, %f, %f, %f, %f'
 
-                for bezier in beziers:
+                for index, bezier in enumerate(beziers):
+                    if index == 0:
+                        file = open(self.filepath, "w")
+                    else:
+                        split = os.path.splitext(self.filepath)
+                        file = open("%s.%d%s" % (split[0], index, split[1]), "w")
+
                     # first entry
                     first_point = bezier.bezier_points[0]
                     line_first = format_first_str % (first_point.co.x, first_point.co.z, first_point.co.y, \
@@ -60,7 +67,8 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
                             last_point.co.x, last_point.co.z, last_point.co.y)
                     file.write(line_last)
 
-                file.close()
+                    file.close()
+
                 self.report({"INFO"}, "Exported to %s" % (self.filepath))
                 return {'FINISHED'}
             else:
