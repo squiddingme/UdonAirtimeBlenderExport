@@ -38,10 +38,6 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
                     beziers.append(subcurve)
 
             if len(beziers) > 0:
-                format_first_str = '%f, %f, %f, %f, %f, %f'
-                format_str = ', %f, %f, %f, %f, %f, %f, %f, %f, %f\n'
-                format_last_str = ', %f, %f, %f, %f, %f, %f'
-
                 for index, bezier in enumerate(beziers):
                     if index == 0:
                         file = open(self.filepath, "w")
@@ -52,24 +48,20 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
                     data = {
                         "name": bpy.context.object.name,
                         "index": index,
-                        "points": "",
+                        "points": [],
                     }
 
                     # first entry
                     first_point = bezier.bezier_points[0]
-                    data["points"] = data["points"] +  format_first_str % (first_point.co.x, first_point.co.z, first_point.co.y, \
-                            first_point.handle_right.x, first_point.handle_right.z, first_point.handle_right.y)
+                    data["points"].extend([first_point.co.x, first_point.co.z, first_point.co.y, first_point.handle_right.x, first_point.handle_right.z, first_point.handle_right.y])
 
                     # loop through points skipping first and last
                     for point in bezier.bezier_points[1:-1]:
-                        data["points"] = data["points"] +  format_str % (point.handle_left.x, point.handle_left.z, point.handle_left.y, \
-                            point.co.x, point.co.z, point.co.y, \
-                            point.handle_right.x, point.handle_right.z, point.handle_right.y)
+                        data["points"].extend([point.handle_left.x, point.handle_left.z, point.handle_left.y, point.co.x, point.co.z, point.co.y, point.handle_right.x, point.handle_right.z, point.handle_right.y])
 
                     # last entry
                     last_point = bezier.bezier_points[-1]
-                    data["points"] = data["points"] +  format_last_str % (last_point.handle_left.x, last_point.handle_left.z, last_point.handle_left.y, \
-                            last_point.co.x, last_point.co.z, last_point.co.y)
+                    data["points"].extend([last_point.handle_left.x, last_point.handle_left.z, last_point.handle_left.y, last_point.co.x, last_point.co.z, last_point.co.y])
 
                     json.dump(data, file, ensure_ascii=False)
 
