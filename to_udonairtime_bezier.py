@@ -64,10 +64,13 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
                     data = {
                         "name": bpy.context.object.name,
                         "index": index,
+                        "position": [],
                         "points": [],
                         "modes": [],
                         "loop": bezier.use_cyclic_u
                     }
+
+                    data["position"].extend([-bpy.context.object.location.x, bpy.context.object.location.z, -bpy.context.object.location.y])
 
                     # first entry
                     first_point = bezier.bezier_points[0]
