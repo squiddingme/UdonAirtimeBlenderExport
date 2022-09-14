@@ -93,6 +93,15 @@ class AirtimeExport(bpy.types.Operator, ExportHelper):
                     else:
                         data["modes"].append("FREE");
 
+                    # add a few more entries to support udonairtime loops
+                    if bezier.use_cyclic_u:
+                        data["points"].extend([last_point.handle_right.x, last_point.handle_right.z, last_point.handle_right.y])
+                        data["points"].extend([first_point.handle_left.x, first_point.handle_left.z, first_point.handle_left.y, first_point.co.x, first_point.co.z, first_point.co.y])
+                        if first_point.handle_left_type == "ALIGNED" and first_point.handle_right_type == "ALIGNED":
+                            data["modes"].append("ALIGNED");
+                        else:
+                            data["modes"].append("FREE");
+
                     json.dump(data, file, ensure_ascii=False)
 
                     file.close()
