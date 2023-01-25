@@ -5,7 +5,7 @@ Exports bézier curves from Blender into a .json format that can be imported by 
 * Blender 2.8+ (I don't know if it works in older versions of Blender, I haven't tested)
 
 ## Download
-Download the script [here](https://github.com/squiddingme/UdonAirtimeBlenderExport/blob/master/to_udonairtime_bezier.py) (click the *Raw* button) to Blender addons folder (typically `AppData/Roaming/Blender Foundation/Blender/[version]/scripts/addons`)
+Download .zip [here](https://github.com/squiddingme/UdonAirtimeBlenderExport/archive/refs/heads/master.zip) and install from Blender add-ons menu (Edit -> Preferences -> Add-ons -> Install)
 
 ## License
 This work is licensed under the terms of the MIT license.
